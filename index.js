@@ -6,6 +6,7 @@ class Block {
         this.data = data;
         this.pre_hash = pre_hash;
         this.hash = this.calculateHash();
+        this.nonce = 0;
     }
 
     /* A simple hash function for demonstration purposes */
@@ -13,6 +14,17 @@ class Block {
         return (
             sha256(this.pre_hash + this.timestamp + JSON.stringify(this.data)).toString()
         );
+    }
+
+    // minig function
+    mineBlock(difficulty) {
+        while (
+            this.hash.substring(0, difficulty) !== Array(difficulty + 1).join('0')
+        ) {
+            this.nonce++;
+            this.hash = this.calculateHash();
+        }
+        console.log('Block mined: ' + this.hash);
     }
 }
 

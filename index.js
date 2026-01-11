@@ -19,7 +19,12 @@ class Block {
 
 class Blockchain {
     constructor() {
-        this.chain = [];
+        this.chain = [this.createGenesisBlock()]; 
+    }
+
+    // Genesis block
+    createGenesisBlock() {
+        return new Block(Date.now(), 'Genesis Block', '0000');
     }
 
     // Add block to the chain
@@ -34,5 +39,5 @@ class Blockchain {
 const rkbcoin = new Blockchain();
 const block = new Block(Date.now(), { amount: 4 }, '00000');
 
-rkbcoin.addBlock(block);
+// rkbcoin.addBlock(block);
 console.log(rkbcoin);

@@ -9,13 +9,6 @@ class Block {
         this.nonce = 0;
     }
 
-    /* A simple hash function for demonstration purposes */
-    calculateHash() {
-        return (
-            sha256(this.pre_hash + this.timestamp + JSON.stringify(this.data)).toString()
-        );
-    }
-
     // minig function
     mineBlock(difficulty) {
         while (
@@ -26,12 +19,21 @@ class Block {
         }
         console.log('Block mined: ' + this.hash);
     }
+
+    /* A simple hash function for demonstration purposes */
+    calculateHash() {
+        return (
+            sha256(this.pre_hash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString()
+        );
+    }
+
 }
 
 
 class Blockchain {
     constructor() {
-        this.chain = [this.createGenesisBlock()]; 
+        this.chain = [this.createGenesisBlock()];
+        this.difficulty = 5; 
     }
 
     // Genesis block
@@ -47,7 +49,7 @@ class Blockchain {
     // Add block to the chain
     addBlock(newBlock) {
         newBlock.pre_hash = this.getLatestBlock().hash;
-        newBlock.hash = newBlock.calculateHash();
+        newBlock.mineBlock(this.difficulty);
         this.chain.push(newBlock);
     }
 
@@ -69,12 +71,10 @@ class Blockchain {
 }
 
 const rkbcoin = new Blockchain();
-const block = new Block(Date.now(), { amount: 10 }, );
+const block1 = new Block(Date.now(), { amount: 10 });
+rkbcoin.addBlock(block1);
 
-rkbcoin.addBlock(block);
-console.log(rkbcoin.isChainValid()); // true
+const block2 = new Block(Date.now(), { amount: 20 });
+rkbcoin.addBlock(block2);
 
-// Tampering with the blockchain
-rkbcoin.chain[1].data = "hacked data";
-// rkbcoin.chain[1].hash = rkbcoin.chain[1].calculateHash();
-console.log(rkbcoin.isChainValid()); // false
+console.log(rkbcoin);

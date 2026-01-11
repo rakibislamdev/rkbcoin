@@ -27,17 +27,22 @@ class Blockchain {
         return new Block(Date.now(), 'Genesis Block', '0000');
     }
 
+    // Get latest block
+    getLatestBlock() {
+        return this.chain[this.chain.length - 1];
+    }
+
     // Add block to the chain
     addBlock(newBlock) {
-        // newBlock.pre_hash = this.getLatestBlock().hash;
-        // newBlock.hash = newBlock.calculateHash();
+        newBlock.pre_hash = this.getLatestBlock().hash;
+        newBlock.hash = newBlock.calculateHash();
         this.chain.push(newBlock);
     }
     
 }
 
 const rkbcoin = new Blockchain();
-const block = new Block(Date.now(), { amount: 4 }, '00000');
+const block = new Block(Date.now(), { amount: 10 }, );
 
-// rkbcoin.addBlock(block);
-console.log(rkbcoin);
+rkbcoin.addBlock(block);
+console.log(rkbcoin.chain[1].data);

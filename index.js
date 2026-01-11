@@ -38,6 +38,21 @@ class Blockchain {
         newBlock.hash = newBlock.calculateHash();
         this.chain.push(newBlock);
     }
+
+    // Validate the integrity of the blockchain
+    isChainValid() {
+        for (let i = 1; i < this.chain.length; i++) {
+            const currentBlock = this.chain[i];
+            const previousBlock = this.chain[i - 1];
+            if (currentBlock.hash !== currentBlock.calculateHash()) {
+                return false;
+            }
+            if (currentBlock.pre_hash !== previousBlock.hash) {
+                return false;
+            }
+        }
+        return true;
+    }
     
 }
 
@@ -45,4 +60,9 @@ const rkbcoin = new Blockchain();
 const block = new Block(Date.now(), { amount: 10 }, );
 
 rkbcoin.addBlock(block);
-console.log(rkbcoin.chain[1].data);
+console.log(rkbcoin.isChainValid()); // true
+
+// Tampering with the blockchain
+rkbcoin.chain[1].data = "hacked data";
+// rkbcoin.chain[1].hash = rkbcoin.chain[1].calculateHash();
+console.log(rkbcoin.isChainValid()); // false

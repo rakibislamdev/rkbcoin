@@ -1,9 +1,12 @@
 const sha256 = require('crypto-js/sha256')
 
+// =================================================================================
+// Block class start
+// =================================================================================
 class Block {
-    constructor(timestamp, data, pre_hash = '') {
+    constructor(timestamp, transactions, pre_hash = '') {
         this.timestamp = timestamp;
-        this.data = data;
+        this.transactions = transactions;
         this.pre_hash = pre_hash;
         this.hash = this.calculateHash();
         this.nonce = 0;
@@ -23,13 +26,33 @@ class Block {
     /* A simple hash function for demonstration purposes */
     calculateHash() {
         return (
-            sha256(this.pre_hash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString()
+            sha256(this.pre_hash + this.timestamp + JSON.stringify(this.transactions) + this.nonce).toString()
         );
     }
 
 }
+// =================================================================================
+// Block class end
+// =================================================================================
+
+// =================================================================================
+// Transaction class start
+// =================================================================================
+class Transaction {
+    constructor(fromAddress, toAddress, amount){
+        this.fromAddress = fromAddress;
+        this.toAddress = toAddress;
+        this.amount = amount;
+    }
+}
+// =================================================================================
+// Transaction class end
+// =================================================================================
 
 
+//=================================================================================
+//  Blockchain class start
+// =================================================================================
 class Blockchain {
     constructor() {
         this.chain = [this.createGenesisBlock()];
@@ -69,6 +92,9 @@ class Blockchain {
     }
     
 }
+// =================================================================================
+//  Blockchain class end
+// =================================================================================
 
 const rkbcoin = new Blockchain();
 const block1 = new Block(Date.now(), { amount: 10 });

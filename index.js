@@ -59,6 +59,7 @@ class Blockchain {
         this.difficulty = 5;
         
         this.pendingTransactions = [];
+        this.miningReward = 10;
     }
 
     // Genesis block
@@ -75,13 +76,15 @@ class Blockchain {
         this.pendingTransactions.push(transaction);
     }
 
-    minePendingTransactions(){
+    minePendingTransactions(minerAddress){
         let block = new Block(Date.now(), this.pendingTransactions);
         block.pre_hash = this.getLatestBlock().hash;
         block.mineBlock(this.difficulty);
         this.chain.push(block);
 
         this.pendingTransactions = [];
+        // Reward the miner by creating a new transaction
+        this.pendingTransactions.push(new Transaction(null, minerAddress, this.miningReward));
     }
 
     // Add block to the chain
@@ -132,7 +135,8 @@ const rkbcoin = new Blockchain();
 rkbcoin.createTransaction(new Transaction('address1', 'address2', 100));
 rkbcoin.createTransaction(new Transaction('address2', 'address1', 50));
 
-rkbcoin.minePendingTransactions();
+rkbcoin.minePendingTransactions('miner-address');
 // console.log('Blockchain is : ', rkbcoin);
-console.log('Balance of address1 is', rkbcoin.getBalanceOfAddress('address1'));
-console.log('Balance of address2 is', rkbcoin.getBalanceOfAddress('address2'));
+console.log('Balance of miner-address is', rkbcoin.getBalanceOfAddress('miner-address'));
+rkbcoin.minePendingTransactions('miner-address');
+console.log('Balance of miner-address is', rkbcoin.getBalanceOfAddress('miner-address'));

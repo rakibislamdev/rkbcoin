@@ -56,7 +56,9 @@ class Transaction {
 class Blockchain {
     constructor() {
         this.chain = [this.createGenesisBlock()];
-        this.difficulty = 5; 
+        this.difficulty = 5;
+        
+        this.pendingTransactions = [];
     }
 
     // Genesis block
@@ -67,6 +69,19 @@ class Blockchain {
     // Get latest block
     getLatestBlock() {
         return this.chain[this.chain.length - 1];
+    }
+
+    createTransaction(transaction){
+        this.pendingTransactions.push(transaction);
+    }
+
+    minePendingTransactions(){
+        let block = new Block(Date.now(), this.pendingTransactions);
+        block.pre_hash = this.getLatestBlock().hash;
+        block.mineBlock(this.difficulty);
+        this.chain.push(block);
+
+        this.pendingTransactions = [];
     }
 
     // Add block to the chain
@@ -97,10 +112,8 @@ class Blockchain {
 // =================================================================================
 
 const rkbcoin = new Blockchain();
-const block1 = new Block(Date.now(), { amount: 10 });
-rkbcoin.addBlock(block1);
+rkbcoin.createTransaction(new Transaction('address1', 'address2', 100));
+rkbcoin.createTransaction(new Transaction('address2', 'address1', 50));
 
-const block2 = new Block(Date.now(), { amount: 20 });
-rkbcoin.addBlock(block2);
-
-console.log(rkbcoin);
+rkbcoin.minePendingTransactions();
+console.log('Blockchain is : ', rkbcoin);

@@ -105,6 +105,23 @@ class Blockchain {
         }
         return true;
     }
+
+    // get balance of address
+    getBalanceOfAddress(address){
+        let balance = 0;
+        for(const block of this.chain){
+            for(const transaction of block.transactions){
+                if(transaction.fromAddress === address){
+                    balance -= transaction.amount;
+                }
+
+                if(transaction.toAddress === address){
+                    balance += transaction.amount;
+                }
+            }
+        }
+        return balance;
+    }
     
 }
 // =================================================================================
@@ -116,4 +133,6 @@ rkbcoin.createTransaction(new Transaction('address1', 'address2', 100));
 rkbcoin.createTransaction(new Transaction('address2', 'address1', 50));
 
 rkbcoin.minePendingTransactions();
-console.log('Blockchain is : ', rkbcoin);
+// console.log('Blockchain is : ', rkbcoin);
+console.log('Balance of address1 is', rkbcoin.getBalanceOfAddress('address1'));
+console.log('Balance of address2 is', rkbcoin.getBalanceOfAddress('address2'));
